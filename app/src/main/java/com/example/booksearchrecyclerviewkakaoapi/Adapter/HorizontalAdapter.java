@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.MainActivity;
@@ -60,25 +61,27 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Ca
         Log.v(TAG, "onBindViewHolder==" + bookVOSList.get(position).getTitle());
 
         //https://jizard.tistory.com/179   => Glide
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(getImageUrl);
-                    InputStream inputStream = url.openStream();
-                    bitmap = BitmapFactory.decodeStream(inputStream); //InputStream 으로부터 Bitmap를 만든다
-                    handler.post(new Runnable() { //Runnable 객체 전달(핸들러에 연결된 메시지큐에 추가)
-                        @Override
-                        public void run() {  // 화면에 그려줄 작업
-                            holder.iv_poster.setImageBitmap(bitmap);
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.v(TAG, "thread_run()_Exception =" + e.toString());
-                }
-            }
-        });
-        thread.start();
+        Glide.with(context).load(getImageUrl).into(holder.iv_poster);
+        //Thread 를 이용한 URL Image 호출
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    URL url = new URL(getImageUrl);
+//                    InputStream inputStream = url.openStream();
+//                    bitmap = BitmapFactory.decodeStream(inputStream); //InputStream 으로부터 Bitmap를 만든다
+//                    handler.post(new Runnable() { //Runnable 객체 전달(핸들러에 연결된 메시지큐에 추가)
+//                        @Override
+//                        public void run() {  // 화면에 그려줄 작업
+//                            holder.iv_poster.setImageBitmap(bitmap);
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    Log.v(TAG, "thread_run()_Exception =" + e.toString());
+//                }
+//            }
+//        });
+//        thread.start();
 
         //card_item XML 의 ImageVIew의 외각을 라운드
         GradientDrawable drawable = (GradientDrawable) context.getDrawable(R.drawable.frame);

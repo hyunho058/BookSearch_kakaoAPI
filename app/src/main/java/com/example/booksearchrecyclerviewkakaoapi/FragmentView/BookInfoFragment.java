@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 
 import java.io.InputStream;
@@ -55,11 +56,9 @@ public class BookInfoFragment extends Fragment {
         Log.v(TAG, "Title = " + bundle.getString("Title"));
         getUrl = bundle.getString("Url");
         Log.v(TAG,"Image_URL=="+getUrl);
-        thread.start();
-
-        GradientDrawable drawable=(GradientDrawable) context.getDrawable(R.drawable.frame);
-        ivBookImage.setBackground(drawable);
-        ivBookImage.setClipToOutline(true);
+        //Glide Library 이용한 url imageView set??
+        Glide.with(context).load(getUrl).into(ivBookImage);
+//        thread.start();
 
         tvTitle.setText(bundle.getString("Title"));
         tvAuthor.setText(bundle.getSerializable("Authors").toString().replaceAll("]", "").replaceAll("\\[", ""));
@@ -68,25 +67,25 @@ public class BookInfoFragment extends Fragment {
         return view;
     }
 
-    Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            try{
-                URL url = new URL(getUrl);
-                Log.v(TAG,"url==="+url);
-                InputStream inputStream = url.openStream();
-                Log.v(TAG,"InputStream=========="+inputStream);
-                bitmap = BitmapFactory.decodeStream(inputStream); //InputStream 으로부터 Bitmap를 만든다
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {  // 화면에 그려줄 작업
-                        Log.v(TAG,"handler.post_run()----------------"+bitmap);
-                        ivBookImage.setImageBitmap(bitmap);
-                    }
-                });
-            } catch(Exception e){
-                Log.v(TAG,"thread_run()_Exception ="+e.toString());
-            }
-        }
-    });
+//    Thread thread = new Thread(new Runnable() {
+//        @Override
+//        public void run() {
+//            try{
+//                URL url = new URL(getUrl);
+//                Log.v(TAG,"url==="+url);
+//                InputStream inputStream = url.openStream();
+//                Log.v(TAG,"InputStream=========="+inputStream);
+//                bitmap = BitmapFactory.decodeStream(inputStream); //InputStream 으로부터 Bitmap를 만든다
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {  // 화면에 그려줄 작업
+//                        Log.v(TAG,"handler.post_run()----------------"+bitmap);
+//                        ivBookImage.setImageBitmap(bitmap);
+//                    }
+//                });
+//            } catch(Exception e){
+//                Log.v(TAG,"thread_run()_Exception ="+e.toString());
+//            }
+//        }
+//    });
 }
