@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#363333</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorBookTitle">#3D3336</color>
+    <color name="colorFragmentBackground">#AFA8AA</color>
+    <color name="colorActivityBackground">#363333</color>
+    <color name="colorActivityFont">#D3CECE</color>
+</resources>
