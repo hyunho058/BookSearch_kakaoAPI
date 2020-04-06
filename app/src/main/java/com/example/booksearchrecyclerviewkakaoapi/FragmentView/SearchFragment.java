@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.booksearchrecyclerviewkakaoapi.BookSearchRunnable;
+import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 

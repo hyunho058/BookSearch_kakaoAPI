@@ -1,4 +1,4 @@
-package com.example.booksearchrecyclerviewkakaoapi;
+package com.example.booksearchrecyclerviewkakaoapi.CallBack;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -103,6 +103,7 @@ public class BookSearchRunnable implements Runnable {
             Bundle bundle = new Bundle();
             bundle.putSerializable("list", jsonBookStringDataList);
             bundle.putSerializable("bookList", bookList);
+            bundle.putSerializable("documentList",docList);
             Message message = new Message();
             message.setData(bundle);
             handler.sendMessage(message);

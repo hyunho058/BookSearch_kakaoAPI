@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.ViewType;
+import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
