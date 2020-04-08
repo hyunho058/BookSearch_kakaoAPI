@@ -32,13 +32,28 @@ public class Document {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             contents = jsonObject.getString("contents");
+            datetime=jsonObject.getString("datetime");
+            isbn=jsonObject.getString("isbn");
+            price=jsonObject.getString("price");
+            publisher=jsonObject.getString("publisher");
+            sale_price=jsonObject.getString("sale_price");
+            status=jsonObject.getString("status");
+            thumbnail=jsonObject.getString("thumbnail");
+            title=jsonObject.getString("title");
+            url=jsonObject.getString("url");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        try{
+            for(int i=0; i<jsonObject.getJSONArray("translators").length(); i++){
+                String translator = jsonObject.getJSONArray("translators").get(i).toString();
+                translators.add(translator);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 
