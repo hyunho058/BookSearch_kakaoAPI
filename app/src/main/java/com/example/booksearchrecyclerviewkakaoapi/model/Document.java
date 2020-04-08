@@ -19,7 +19,6 @@ public class Document {
     ArrayList<String> translators;
     String url;
 
-
     Document() {
 
     }
