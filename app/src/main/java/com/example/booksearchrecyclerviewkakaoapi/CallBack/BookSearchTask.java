@@ -82,20 +82,7 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
             String jsonString = mapper.writeValueAsString(jsonObject);
             Log.v(TAG, "jsonString==" + jsonString);
 
-            bookList = mapper.readValue(jsonString, new TypeReference<ArrayList<BookVO>>() {
-            });
-            ArrayList<String> resultData = new ArrayList<>();
-            BookVO[] jsonBookStringDataList = mapper.readValue(
-                    jsonString.toString(), BookVO[].class);
-
-            for (BookVO vo : bookList) {
-                resultData.add(vo.getTitle());
-            }
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("list", jsonBookStringDataList);
-            bundle.putSerializable("bookList", bookList);
-            bundle.putSerializable("documentList",docList);
+            bookList = mapper.readValue(jsonString, new TypeReference<ArrayList<BookVO>>() {});
 
         } catch (Exception e) {
             Log.v(TAG, "run()_Exception==" + e.toString());
