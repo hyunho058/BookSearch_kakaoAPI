@@ -18,12 +18,14 @@ import android.widget.Toast;
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.ViewType;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
+import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchTask;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
@@ -53,16 +55,25 @@ public class MainActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(mClick);
 
         fragmentManager = getSupportFragmentManager();
-        //데이터 생성
-        threadData("여행");
-        threadData("java");
-        threadData("c언어");
-        threadData("python");
-        threadData("Linux");
-        threadData("경제");
+        //  AsyncTask 이용한 데이터 생성
+        AsyncTaskData("java");
+        AsyncTaskData("c언어");
+        AsyncTaskData("python");
+        AsyncTaskData("Linux");
+        AsyncTaskData("경제");
+        AsyncTaskData("여행");
+
+        // Thread 이용한 데이터 생성
+//        threadData("여행");
+//        threadData("java");
+//        threadData("c언어");
+//        threadData("python");
+//        threadData("Linux");
+//        threadData("경제");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewVertical);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+                this, LinearLayoutManager.VERTICAL, false);
         verticalAdapter = new VerticalAdapter(this, adapterVO, bookInfoFragment);
         //context, listItems, bookDetailFragment
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -88,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                     if (searchFragment == null) {
                         searchFragment = new SearchFragment();
                     }
-                    fragmentTransaction.replace(R.id.frame, searchFragment).commitAllowingStateLoss();
+                    fragmentTransaction.replace(
+                            R.id.frame, searchFragment).commitAllowingStateLoss();
                     searchFragment.setArguments(bundle);
                     break;
             }
@@ -133,6 +145,20 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             Log.v(TAG, "Thread_InterruptedException" + e.toString());
         }
+    }
+
+    //AsyncTask 이용한 REST API 호출
+    public void AsyncTaskData(String keyword){
+        try {
+            bookList = new BookSearchTask(keyword).execute().get();
+        } catch (ExecutionException e) {
+            Log.v(TAG,"e.printStackTrace() ="+e.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.v(TAG,"e.printStackTrace() ="+e.toString());
+        }
+        initData(keyword);
+        Log.v(TAG,"AsyncTask == "+bookList);
     }
 
     //adapterVO 에 데이터 저장

@@ -32,6 +32,7 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
     @Override
     protected ArrayList<BookVO> doInBackground(String... params) {
         Log.v(TAG,"doInBackground()_Start");
+        Log.v(TAG,"doInBackground()_keyword"+keyword);
         String url = "https://dapi.kakao.com/v3/search/book?target=title";
         url += "&query=" + keyword;
         try {
@@ -46,7 +47,8 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
 
             /*** RESPONSE */
             //JSON 형테의 OPEN API 데이터를 bufferedReader 를 이용해 가져온다.
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
             StringBuffer stringBuffer = new StringBuffer();
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
@@ -73,8 +75,8 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
             //Jackson Library
             ObjectMapper mapper = new ObjectMapper();
             //Json을 읽어서 documents 를 key로 설정하고 최상위 객체인 Object type 으로 책 정보들을 객체화
-            Map<String, Object> map = mapper.readValue(stringBuffer.toString(), new TypeReference<Map<String, Object>>() {
-            });
+            Map<String, Object> map = mapper.readValue(
+                    stringBuffer.toString(), new TypeReference<Map<String, Object>>(){});
             Object jsonObject = map.get("documents");
             //객체화된 json data를 String 문자열로 변환
             String jsonString = mapper.writeValueAsString(jsonObject);
@@ -83,7 +85,8 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
             bookList = mapper.readValue(jsonString, new TypeReference<ArrayList<BookVO>>() {
             });
             ArrayList<String> resultData = new ArrayList<>();
-            BookVO[] jsonBookStringDataList = mapper.readValue(jsonString.toString(), BookVO[].class);
+            BookVO[] jsonBookStringDataList = mapper.readValue(
+                    jsonString.toString(), BookVO[].class);
 
             for (BookVO vo : bookList) {
                 resultData.add(vo.getTitle());
@@ -97,7 +100,6 @@ public class BookSearchTask extends AsyncTask<String, Void, ArrayList<BookVO>> {
         } catch (Exception e) {
             Log.v(TAG, "run()_Exception==" + e.toString());
         }
-
         return bookList;
     }
 
