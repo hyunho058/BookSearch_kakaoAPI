@@ -19,10 +19,12 @@ import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.ViewType;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchTask;
+import com.example.booksearchrecyclerviewkakaoapi.CallBack.JsonObjectTest;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
+import com.example.booksearchrecyclerviewkakaoapi.model.Document;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<AdapterVO> adapterVO = new ArrayList<>();
     ArrayList<BookVO> bookList;
+    ArrayList<Document> documentList;
+
 
     public static boolean isInfoOpen = false;
 
@@ -123,48 +127,62 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //BookSearchRunnable 를 호출해 API로 부터 데이터를 받아옴
-    public void threadData(final String keyword) {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                Log.v(TAG, "-----------handleMessage() Start---------");
-                Bundle bundle = msg.getData();
-                bookList = (ArrayList<BookVO>) bundle.getSerializable("bookList");
-                Log.v(TAG, "threadData()_bookList============" + bookList);
+    /**
+     * BookSearchRunnable 를 호출해 API로 부터 데이터를 받아옴
+     * @param keyword
+     */
+//    public void threadData(final String keyword) {
+//        Log.v(TAG,"threadData_keyword=="+keyword);
+//        handler = new Handler() {
+//            @Override
+//            public void handleMessage(@NonNull Message msg) {
+//                super.handleMessage(msg);
+//                Log.v(TAG, "-----------handleMessage() Start---------");
+//                Bundle bundle = msg.getData();
+//                bookList = (ArrayList<BookVO>) bundle.getSerializable("bookList");
+//                Log.v(TAG, "threadData()_bookList============" + bookList);
+//
+//                initData(keyword);
+//            }
+//        };
+//        Thread thread = new Thread(new BookSearchRunnable(keyword, handler));
+//        thread.start();
+//        Log.v(TAG, "-------------Thread Start-------------");
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            Log.v(TAG, "Thread_InterruptedException" + e.toString());
+//        }
+//    }
 
-                initData(keyword);
-            }
-        };
-        Thread thread = new Thread(new BookSearchRunnable(keyword, handler));
-        thread.start();
-        Log.v(TAG, "-------------Thread Start-------------");
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            Log.v(TAG, "Thread_InterruptedException" + e.toString());
-        }
-    }
-
-    //AsyncTask 이용한 REST API 호출
+    /**
+     * AsyncTask 이용한 REST API 호출
+     * @param keyword
+     */
     public void AsyncTaskData(String keyword){
+        Log.v(TAG,"AsyncTaskData()_keyword=="+keyword);
         try {
             bookList = new BookSearchTask(keyword).execute().get();
+            documentList = new JsonObjectTest(keyword).execute().get();
         } catch (ExecutionException e) {
             Log.v(TAG,"e.printStackTrace() ="+e.toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
             Log.v(TAG,"e.printStackTrace() ="+e.toString());
         }
+        Log.v(TAG,"documentList=="+documentList);
         initData(keyword);
         Log.v(TAG,"AsyncTask == "+bookList);
     }
 
-    //adapterVO 에 데이터 저장
+    /**
+     * adapterVO 에 데이터 저장
+     * @param keyword
+     */
     public void initData(String keyword) {
         Log.v(TAG, "-----------initData() Start------------");
         adapterVO.add(new AdapterVO(keyword, ViewType.ItemBookTitle));
-        adapterVO.add(new AdapterVO(this, bookList, ViewType.ItemHorizontal));
+//        adapterVO.add(new AdapterVO(this, bookList, ViewType.ItemHorizontal));
+        adapterVO.add(new AdapterVO(this, documentList, ViewType.ItemHorizontal));
     }
 }

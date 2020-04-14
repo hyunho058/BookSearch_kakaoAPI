@@ -31,8 +31,12 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.bookInfoFragment = bookInfoFragment;
     }
-
-    //Layout을 만들어서 Holder에 저장 (View Holder 객체 를 생성하고 View를 붙여줌
+    /**
+     * Layout을 만들어서 Holde r에 저장 (View Holder 객체 를 생성하고 View 를 붙여줌
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,9 +50,13 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return new HorizontalItem(view);
         }
     }
-    //넘겨받은 데이터를 화면에 출력하는 역할
-    //제활용되는 View가 호출하여 실행되는 Method
-    //View Holder 를 전달하고 Adapter는 position 의 데이터를 결합
+    /**
+     * 넘겨받은 데이터를 화면에 출력하는 역할
+     * 제활용되는 View가 호출하여 실행되는 Method
+     * View Holder 를 전달하고 Adapter는 position 의 데이터를 결합
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         Log.v(TAG,"onBindViewHolder=="+holder+"/position=="+position);
@@ -62,7 +70,7 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }else if(holder instanceof HorizontalItem){
             ((HorizontalItem)holder).recycler_horizontal.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-            horizontalAdapter = new HorizontalAdapter(context, adapterList.get(position).getBookVO(), bookInfoFragment);
+            horizontalAdapter = new HorizontalAdapter(context, adapterList.get(position).getDocumentList(), bookInfoFragment);
             ((HorizontalItem)holder).recycler_horizontal.setAdapter(horizontalAdapter);
         }
     }
