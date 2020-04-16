@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BookVO> bookList;
     ArrayList<Document> documentList;
 
-
     public static boolean isInfoOpen = false;
 
     @Override
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             searchFragment = null;
         } else if (isInfoOpen) {
             Toast.makeText(getApplicationContext(), "여기서!", Toast.LENGTH_SHORT).show();
-          
+
             isInfoOpen = false;
         } else {
             super.onBackPressed();

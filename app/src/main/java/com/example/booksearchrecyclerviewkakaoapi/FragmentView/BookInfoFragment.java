@@ -52,11 +52,12 @@ public class BookInfoFragment extends Fragment {
         tvISBN = view.findViewById(R.id.tvISBN);
         ivBookImage = view.findViewById(R.id.ivBookImage);
 
-
         Log.v(TAG, "Title = " + bundle.getString("Title"));
         getUrl = bundle.getString("Url");
         Log.v(TAG,"Image_URL=="+getUrl);
-        //Glide Library 이용한 url imageView set??
+        /**
+         *Glide Library 이용한 url imageView set??
+         */
         Glide.with(context).load(getUrl).into(ivBookImage);
 //        thread.start();
 
