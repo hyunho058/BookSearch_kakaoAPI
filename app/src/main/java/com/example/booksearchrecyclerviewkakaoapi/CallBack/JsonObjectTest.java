@@ -14,7 +14,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,7 +29,12 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
     String TAG = "JsonObjectTest";
     String keyword = "";
     ArrayList<Document> documentList;
+    ArrayList<Document> documentListR;
+    List<Document> doo = new ArrayList<>();
     ArrayList docList;
+
+    private String token = "KakaoAK a85301089026f3d76b61ac72f59b1d91";
+    private String token1 = "a85301089026f3d76b61ac72f59b1d91";
 
     public JsonObjectTest(String keyword) {
         this.keyword = keyword;
@@ -51,7 +60,7 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
             // 요청방식 설정(API 문서 참조)
             con.setRequestMethod("GET");
             // 인증 설정
-            con.setRequestProperty("Authorization", "KakaoAK a85301089026f3d76b61ac72f59b1d91");
+            con.setRequestProperty("Authorization", token);
 
             /*** RESPONSE */
             //JSON 형테의 OPEN API 데이터를 bufferedReader 를 이용해 가져온다.
@@ -84,20 +93,26 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
             Log.v(TAG, "run()_Exception==" + e.toString());
         }
 
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://dapi.kakao.com")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        RetrofitService service = retrofit.create(RetrofitService.class);
+        Call<List<Document>> call = service.deocument("1","java");
+        call.enqueue(new Callback<List<Document>>() {
+            @Override
+            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
+                Log.v(TAG,"response.body()=="+response.body());
+                if(response.isSuccessful()){
+                    doo = response.body();
+                    Log.v(TAG,"document=="+doo);
+                }else {
+                    Log.v(TAG,"err==" +response.errorBody().toString());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Document>> call, Throwable t) {
 
-//        Retrofit client = new Retrofit.Builder().baseUrl(
-//                "https://dapi.kakao.com").addCallAdapterFactory(GsonConverterFactory.create()).build();
-
-        /**
-         *  https://falinrush.tistory.com/5
-         *  https://kang6264.tistory.com/entry/Retrofit-%EA%B8%B0%EB%B3%B8-%EA%B8%B0%EB%8A%A5%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90%EB%82%A0%EC%94%A8%EB%A5%BC-%EC%A1%B0%ED%9A%8C%ED%95%98%EB%8A%94-RestAPI
-         *   https://altongmon.tistory.com/745
-         *   https://calyfactory.github.io/view-binding/
-         *   https://square.github.io/retrofit/
-         */
-
-
-
+            }
+        });
         return documentList;
     }
 }
