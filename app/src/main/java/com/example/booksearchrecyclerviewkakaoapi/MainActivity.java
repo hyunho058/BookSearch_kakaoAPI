@@ -1,6 +1,5 @@
 package com.example.booksearchrecyclerviewkakaoapi;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.ViewType;
-import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchTask;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.JsonObjectTest;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
@@ -44,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<AdapterVO> adapterVO = new ArrayList<>();
     ArrayList<BookVO> bookList;
     ArrayList<Document> documentList;
+
+    ArrayList<Document> documentListR;
 
     public static boolean isInfoOpen = false;
 

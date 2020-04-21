@@ -93,24 +93,25 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
             Log.v(TAG, "run()_Exception==" + e.toString());
         }
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://dapi.kakao.com")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://dapi.kakao.com/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
         RetrofitService service = retrofit.create(RetrofitService.class);
-        Call<List<Document>> call = service.deocument("1","java");
+        Call<List<Document>> call = service.deocument(token1,"java");
         call.enqueue(new Callback<List<Document>>() {
             @Override
             public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
                 Log.v(TAG,"response.body()=="+response.body());
+                Log.v(TAG,"call=="+call);
                 if(response.isSuccessful()){
                     doo = response.body();
                     Log.v(TAG,"document=="+doo);
                 }else {
-                    Log.v(TAG,"err==" +response.errorBody().toString());
+                    Log.v(TAG,"err==" +response.errorBody());
                 }
             }
             @Override
             public void onFailure(Call<List<Document>> call, Throwable t) {
-
+                Log.v(TAG,"call== "+call + "t== "+t);
             }
         });
         return documentList;

@@ -13,10 +13,10 @@ import retrofit2.http.Query;
  *  KaokaoAPI OookSearch URL = "https://dapi.kakao.com/v3/search/book?target=title"
  */
 public interface RetrofitService {
-    @GET("/v3/search/book?target=")
+    @GET("v3/search/book?target=title")
     Call<List<Document>> deocument(
-            @Header("Authorization") String token,
-            @Query("title") String keyword);
+            @Header("Authorization:KakaoAK") String token,
+            @Query("title") String title);
 }
 
 
