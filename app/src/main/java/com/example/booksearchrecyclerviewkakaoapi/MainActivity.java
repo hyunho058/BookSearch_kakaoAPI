@@ -1,11 +1,13 @@
 package com.example.booksearchrecyclerviewkakaoapi;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -22,6 +24,9 @@ import com.example.booksearchrecyclerviewkakaoapi.FragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
+import com.google.android.material.tabs.TabLayout;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -32,11 +37,14 @@ public class MainActivity extends AppCompatActivity {
     Button btnSearch;
     Bundle bundle;
     Handler handler;
+    TabLayout tabLayout;
     public static FragmentManager fragmentManager;
     public static FragmentTransaction fragmentTransaction;
     SearchFragment searchFragment;
     BookInfoFragment bookInfoFragment;
     VerticalAdapter verticalAdapter;
+
+    IntentIntegrator intentIntegrator;
 
     ArrayList<AdapterVO> adapterVO = new ArrayList<>();
     ArrayList<BookVO> bookList;
@@ -55,6 +63,60 @@ public class MainActivity extends AppCompatActivity {
         btnHome.setOnClickListener(mClick);
         btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(mClick);
+        tabLayout=(TabLayout) findViewById(R.id.tabLayout);
+
+        //QR code - Zxing Library
+        intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
+
+        tabLayout.addTab(tabLayout.newTab().setText("Home"));
+        tabLayout.addTab(tabLayout.newTab().setText("Search"));
+        tabLayout.addTab(tabLayout.newTab().setText("QR"));
+        tabLayout.addTab(tabLayout.newTab().setText("Map"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+            //Tap 이 선택 되었을떄 호출
+                Log.v(TAG,"onTabSelected()_getPosition())="+tab.getPosition());
+                fragmentTransaction = fragmentManager.beginTransaction();
+                bundle = new Bundle();
+                switch (tab.getPosition()){
+                    case  0:
+                        Log.v(TAG, "btnHome_Fragment_ShutDown" + btnHome.getId());
+                        if (searchFragment != null) {
+                            fragmentTransaction.remove(searchFragment);
+                            fragmentTransaction.commit();
+                            searchFragment = null;
+                        }
+                        break;
+                    case 1:
+                        Log.v(TAG, "btnSearch" + btnSearch.getId());
+                        if (searchFragment == null) {
+                            searchFragment = new SearchFragment();
+                        }
+                        fragmentTransaction.replace(
+                                R.id.frame, searchFragment).commitAllowingStateLoss();
+                        searchFragment.setArguments(bundle);
+                        break;
+                    case 2:
+                        intentIntegrator.initiateScan();
+                        break;
+                    case 3:
+
+                        break;
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //Tap 이 선택되지 않았을때 호출
+                Log.v(TAG,"onTabUnselected()=="+tab);
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                //Tap 이 다시 선택 되었을떄 호출
+                Log.v(TAG,"onTabReselected()=="+tab);
+            }
+        });
 
         fragmentManager = getSupportFragmentManager();
         //  AsyncTask 이용한 데이터 생성
@@ -108,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
     @Override
     public void onBackPressed() {
         if (searchFragment != null && fragmentTransaction != null) {
@@ -123,6 +184,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, requestCode, data);
+        if(result != null){
+            if(result.getContents() == null){
+                Log.v(TAG, "result.getContents() == "+result.getContents());
+            }else {
+                Log.v(TAG, "result.getContents() == "+result.getContents());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
