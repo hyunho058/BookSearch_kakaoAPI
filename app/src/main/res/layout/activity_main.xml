@@ -30,28 +30,28 @@
         app:tabMode="fixed"
         app:tabTextColor="#000000"
         app:tabSelectedTextColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/linear"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <Button
-            android:id="@+id/btnHome"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:text="HOME"/>
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:text="SEARCH"/>
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linear"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent">-->
+<!--        <Button-->
+<!--            android:id="@+id/btnHome"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="10"-->
+<!--            android:text="HOME"/>-->
+<!--        <Button-->
+<!--            android:id="@+id/btnSearch"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="10"-->
+<!--            android:text="SEARCH"/>-->
+<!--    </LinearLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

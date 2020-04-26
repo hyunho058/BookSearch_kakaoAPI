@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnHome = findViewById(R.id.btnHome);
-        btnHome.setOnClickListener(mClick);
-        btnSearch = findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(mClick);
+//        btnHome = findViewById(R.id.btnHome);
+//        btnHome.setOnClickListener(mClick);
+//        btnSearch = findViewById(R.id.btnSearch);
+//        btnSearch.setOnClickListener(mClick);
         tabLayout=(TabLayout) findViewById(R.id.tabLayout);
 
         //QR code - Zxing Library
@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 bundle = new Bundle();
                 switch (tab.getPosition()){
                     case  0:
-                        Log.v(TAG, "btnHome_Fragment_ShutDown" + btnHome.getId());
                         if (searchFragment != null) {
                             fragmentTransaction.remove(searchFragment);
                             fragmentTransaction.commit();
@@ -90,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case 1:
-                        Log.v(TAG, "btnSearch" + btnSearch.getId());
                         if (searchFragment == null) {
                             searchFragment = new SearchFragment();
                         }
@@ -109,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 //Tap 이 선택되지 않았을때 호출
-                Log.v(TAG,"onTabUnselected()=="+tab);
+                Log.v(TAG,"onTabUnselected()=="+tab.getPosition());
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 //Tap 이 다시 선택 되었을떄 호출
-                Log.v(TAG,"onTabReselected()=="+tab);
+                Log.v(TAG,"onTabReselected()=="+tab.getPosition());
             }
         });
 
@@ -144,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(verticalAdapter);
     }
 
+    /*
     View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -170,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    */
     @Override
     public void onBackPressed() {
         if (searchFragment != null && fragmentTransaction != null) {

@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/iv_poster"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
@@ -19,7 +19,7 @@
         android:text="TextView"
         android:textColor="@color/colorActivityFont"
         android:textAlignment="textStart"
-        android:textSize="18dp"
+        android:textSize="15dp"
         android:layout_marginStart="10dp"
         android:ellipsize="marquee"/>
 </LinearLayout>
