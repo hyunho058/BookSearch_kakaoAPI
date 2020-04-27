@@ -7,7 +7,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,8 +29,12 @@ import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
 import com.google.android.material.tabs.TabLayout;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -69,53 +77,6 @@ public class MainActivity extends AppCompatActivity {
         intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
 
-        tabLayout.addTab(tabLayout.newTab().setText("Home"));
-        tabLayout.addTab(tabLayout.newTab().setText("Search"));
-        tabLayout.addTab(tabLayout.newTab().setText("QR"));
-        tabLayout.addTab(tabLayout.newTab().setText("Map"));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-            //Tap 이 선택 되었을떄 호출
-                Log.v(TAG,"onTabSelected()_getPosition())="+tab.getPosition());
-                fragmentTransaction = fragmentManager.beginTransaction();
-                bundle = new Bundle();
-                switch (tab.getPosition()){
-                    case  0:
-                        if (searchFragment != null) {
-                            fragmentTransaction.remove(searchFragment);
-                            fragmentTransaction.commit();
-                            searchFragment = null;
-                        }
-                        break;
-                    case 1:
-                        if (searchFragment == null) {
-                            searchFragment = new SearchFragment();
-                        }
-                        fragmentTransaction.replace(
-                                R.id.frame, searchFragment).commitAllowingStateLoss();
-                        searchFragment.setArguments(bundle);
-                        break;
-                    case 2:
-                        intentIntegrator.initiateScan();
-                        break;
-                    case 3:
-
-                        break;
-                }
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                //Tap 이 선택되지 않았을때 호출
-                Log.v(TAG,"onTabUnselected()=="+tab.getPosition());
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                //Tap 이 다시 선택 되었을떄 호출
-                Log.v(TAG,"onTabReselected()=="+tab.getPosition());
-            }
-        });
-
         fragmentManager = getSupportFragmentManager();
         //  AsyncTask 이용한 데이터 생성
         AsyncTaskData("java");
@@ -140,6 +101,55 @@ public class MainActivity extends AppCompatActivity {
         //context, listItems, bookDetailFragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(verticalAdapter);
+
+        tabLayout.addTab(tabLayout.newTab().setText("Home"));
+        tabLayout.addTab(tabLayout.newTab().setText("Search"));
+        tabLayout.addTab(tabLayout.newTab().setText("QR"));
+        tabLayout.addTab(tabLayout.newTab().setText("Map"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                //Tap 이 선택 되었을떄 호출
+                Log.v(TAG,"onTabSelected()_getPosition())="+tab.getPosition());
+                fragmentTransaction = fragmentManager.beginTransaction();
+                bundle = new Bundle();
+                switch (tab.getPosition()){
+                    case  0:
+                        if (searchFragment != null) {
+                            fragmentTransaction.remove(searchFragment);
+                            fragmentTransaction.commit();
+                            searchFragment = null;
+                        }
+                        break;
+                    case 1:
+                        if (searchFragment == null) {
+                            searchFragment = new SearchFragment();
+                        }
+                        fragmentTransaction.replace(
+                                R.id.frame, searchFragment).commitAllowingStateLoss();
+                        searchFragment.setArguments(bundle);
+                        break;
+                    case 2:
+                        new IntentIntegrator(MainActivity.this).initiateScan();
+//                        intentIntegrator.initiateScan();
+                        break;
+                    case 3:
+                        startQRCode();
+                        break;
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //Tap 이 선택되지 않았을때 호출
+                Log.v(TAG,"onTabUnselected()=="+tab.getPosition());
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                //Tap 이 다시 선택 되었을떄 호출
+                Log.v(TAG,"onTabReselected()=="+tab.getPosition());
+            }
+        });
+
     }
 
     /*
@@ -186,17 +196,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * CustomScannerActivity에서 정상적으로 Scan이 완료되면 다시 본 activity로 돌아온다.
+     * 이 때, onActivityResult로 결과를 받는다.
+     * 출처: https://devvkkid.tistory.com/98 [개발자입니까?]
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, requestCode, data);
-        if(result != null){
-            if(result.getContents() == null){
-                Log.v(TAG, "result.getContents() == "+result.getContents());
-            }else {
-                Log.v(TAG, "result.getContents() == "+result.getContents());
-            }
+
+        if(resultCode == Activity.RESULT_OK) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            String re = scanResult.getContents();
+            Log.v(TAG, "result.getContents() == "+scanResult.getContents());
+            Intent intent = new Intent();
+            ComponentName cname = new ComponentName("com.example.booksearchrecyclerviewkakaoapi", "\""+re+"\"");
+            intent.setComponent(cname);
+            startActivity(intent);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -256,5 +277,28 @@ public class MainActivity extends AppCompatActivity {
         adapterVO.add(new AdapterVO(keyword, ViewType.ItemBookTitle));
 //        adapterVO.add(new AdapterVO(this, bookList, ViewType.ItemHorizontal));
         adapterVO.add(new AdapterVO(this, documentList, ViewType.ItemHorizontal));
+    }
+    public void startQRCode() {
+        new IntentIntegrator(this).initiateScan();
+    }
+
+    public void generateQRCode(String contents){
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        try {
+            Bitmap bitmap = toBitmap(qrCodeWriter.encode(contents, BarcodeFormat.QR_CODE, 100, 100));
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Bitmap toBitmap(BitMatrix matrix) {
+        int height = matrix.getHeight();
+        int width = matrix.getWidth();
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bmp.setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+            }
+        }
+        return bmp;
     }
 }
