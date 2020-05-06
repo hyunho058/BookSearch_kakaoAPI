@@ -39,7 +39,6 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
     public JsonObjectTest(String keyword) {
         this.keyword = keyword;
     }
-
     /**
      * background 에서 동작한다는메소드
      * ...은 파라미터가 배열처럼 넘어온다는 뜻 한개도될수있고 여러개될수도있음(가변적)

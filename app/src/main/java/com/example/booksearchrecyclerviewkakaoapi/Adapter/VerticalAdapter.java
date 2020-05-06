@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 
@@ -24,11 +25,11 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ArrayList<AdapterVO> adapterList = new ArrayList<AdapterVO>();
     Context context;
     HorizontalAdapter horizontalAdapter;
-    Fragment bookInfoFragment;
+    BookInfoFragment bookInfoFragment;
 
-    public VerticalAdapter(Context context,ArrayList<AdapterVO> adapterList, Fragment bookInfoFragment) {
-        this.adapterList = adapterList;
+    public VerticalAdapter(Context context,ArrayList<AdapterVO> adapterList, BookInfoFragment bookInfoFragment) {
         this.context = context;
+        this.adapterList = adapterList;
         this.bookInfoFragment = bookInfoFragment;
     }
     /**

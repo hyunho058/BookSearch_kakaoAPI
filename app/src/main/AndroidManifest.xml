@@ -11,13 +11,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            android:screenOrientation="fullSensor"
-            android:stateNotNeeded="true"
-            android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"
+<!--            android:screenOrientation="fullSensor"-->
+<!--            android:stateNotNeeded="true"-->
+<!--            android:theme="@style/zxing_CaptureTheme"-->
+<!--            android:windowSoftInputMode="stateAlwaysHidden"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

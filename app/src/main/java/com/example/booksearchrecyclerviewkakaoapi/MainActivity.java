@@ -17,6 +17,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
@@ -24,6 +26,7 @@ import com.example.booksearchrecyclerviewkakaoapi.Adapter.ViewType;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchTask;
 import com.example.booksearchrecyclerviewkakaoapi.CallBack.JsonObjectTest;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
+import com.example.booksearchrecyclerviewkakaoapi.FragmentView.HomeFragment;
 import com.example.booksearchrecyclerviewkakaoapi.FragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static FragmentTransaction fragmentTransaction;
     SearchFragment searchFragment;
     BookInfoFragment bookInfoFragment;
+    HomeFragment homeFragment;
     VerticalAdapter verticalAdapter;
 
     IntentIntegrator intentIntegrator;
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<AdapterVO> adapterVO = new ArrayList<>();
     ArrayList<BookVO> bookList;
     ArrayList<Document> documentList;
-
     ArrayList<Document> documentListR;
 
     public static boolean isInfoOpen = false;
@@ -77,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
 
-        fragmentManager = getSupportFragmentManager();
         //  AsyncTask 이용한 데이터 생성
         AsyncTaskData("java");
         AsyncTaskData("c언어");
@@ -85,6 +87,18 @@ public class MainActivity extends AppCompatActivity {
         AsyncTaskData("Linux");
         AsyncTaskData("경제");
         AsyncTaskData("여행");
+        fragmentManager = getSupportFragmentManager();
+        if (homeFragment == null) {
+            fragmentTransaction=fragmentManager.beginTransaction();
+            bundle = new Bundle();
+            homeFragment = new HomeFragment(adapterVO, bookInfoFragment);
+            bundle.putSerializable("list", documentList);
+            homeFragment.setArguments(bundle);
+            fragmentTransaction.replace(
+                    R.id.frame, homeFragment).commitAllowingStateLoss();
+
+            Log.v(TAG,"fragmentHome==");
+        }
 
         // Thread 이용한 데이터 생성
 //        threadData("여행");
@@ -94,18 +108,18 @@ public class MainActivity extends AppCompatActivity {
 //        threadData("Linux");
 //        threadData("경제");
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewVertical);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
-                this, LinearLayoutManager.VERTICAL, false);
-        verticalAdapter = new VerticalAdapter(this, adapterVO, bookInfoFragment);
-        //context, listItems, bookDetailFragment
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(verticalAdapter);
+//        RecyclerView recyclerView = findViewById(R.id.recyclerViewVertical);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+//                this, LinearLayoutManager.VERTICAL, false);
+//        verticalAdapter = new VerticalAdapter(this, adapterVO, bookInfoFragment);
+//        //context, listItems, bookDetailFragment
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.setAdapter(verticalAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Home"));
-        tabLayout.addTab(tabLayout.newTab().setText("Search"));
-        tabLayout.addTab(tabLayout.newTab().setText("QR"));
-        tabLayout.addTab(tabLayout.newTab().setText("Map"));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("HOME",R.drawable.house_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Search",R.drawable.toys_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("QR",R.drawable.border_vertical_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Map",R.drawable.border_vertical_black_18dp)));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -114,12 +128,15 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 bundle = new Bundle();
                 switch (tab.getPosition()){
-                    case  0:
-                        if (searchFragment != null) {
-                            fragmentTransaction.remove(searchFragment);
-                            fragmentTransaction.commit();
-                            searchFragment = null;
+                    case 0:
+                        if (homeFragment == null) {
+                            homeFragment = new HomeFragment(adapterVO, bookInfoFragment);
+                            Log.v(TAG,"fragmentHome==");
                         }
+                        fragmentTransaction.replace(
+                                R.id.frame, homeFragment).commitAllowingStateLoss();
+                        bundle.putSerializable("list", documentList);
+                        homeFragment.setArguments(bundle);
                         break;
                     case 1:
                         if (searchFragment == null) {
@@ -131,11 +148,32 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         new IntentIntegrator(MainActivity.this).initiateScan();
-//                        intentIntegrator.initiateScan();
+                        intentIntegrator.initiateScan();
                         break;
                     case 3:
-                        startQRCode();
                         break;
+//                    case  0:
+//                        if (searchFragment != null) {
+//                            fragmentTransaction.remove(searchFragment);
+//                            fragmentTransaction.commit();
+//                            searchFragment = null;
+//                        }
+//                        break;
+//                    case 1:
+//                        if (searchFragment == null) {
+//                            searchFragment = new SearchFragment();
+//                        }
+//                        fragmentTransaction.replace(
+//                                R.id.frame, searchFragment).commitAllowingStateLoss();
+//                        searchFragment.setArguments(bundle);
+//                        break;
+//                    case 2:
+//                        new IntentIntegrator(MainActivity.this).initiateScan();
+////                        intentIntegrator.initiateScan();
+//                        break;
+//                    case 3:
+//                        startQRCode();
+//                        break;
                 }
             }
             @Override
@@ -199,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * CustomScannerActivity에서 정상적으로 Scan이 완료되면 다시 본 activity로 돌아온다.
      * 이 때, onActivityResult로 결과를 받는다.
-     * 출처: https://devvkkid.tistory.com/98 [개발자입니까?]
      * @param requestCode
      * @param resultCode
      * @param data
@@ -300,5 +337,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return bmp;
+    }
+    private View createTabView(String tabName, int iconImage){
+        View tabView = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        TextView tvTab = (TextView) tabView.findViewById(R.id.tvTab);
+        tvTab.setText(tabName);
+        ImageView ivTab = (ImageView) tabView.findViewById(R.id.ivTab);
+        ivTab.setImageResource(iconImage);
+        return tabView;
     }
 }

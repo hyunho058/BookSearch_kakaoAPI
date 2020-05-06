@@ -20,7 +20,6 @@ public class Document {
     String url;
 
     Document() {
-
     }
 
     public Document(JSONObject jsonObject) {
