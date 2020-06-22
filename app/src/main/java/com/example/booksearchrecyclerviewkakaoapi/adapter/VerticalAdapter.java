@@ -1,4 +1,4 @@
-package com.example.booksearchrecyclerviewkakaoapi.Adapter;
+package com.example.booksearchrecyclerviewkakaoapi.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,11 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
+import com.example.booksearchrecyclerviewkakaoapi.fragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 

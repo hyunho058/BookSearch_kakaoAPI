@@ -1,8 +1,7 @@
-package com.example.booksearchrecyclerviewkakaoapi.Adapter;
+package com.example.booksearchrecyclerviewkakaoapi.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,14 +18,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.booksearchrecyclerviewkakaoapi.FragmentView.BookInfoFragment;
+import com.example.booksearchrecyclerviewkakaoapi.fragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.MainActivity;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.CardItem> {

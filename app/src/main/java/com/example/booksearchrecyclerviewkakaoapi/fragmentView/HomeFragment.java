@@ -1,4 +1,4 @@
-package com.example.booksearchrecyclerviewkakaoapi.FragmentView;
+package com.example.booksearchrecyclerviewkakaoapi.fragmentView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.booksearchrecyclerviewkakaoapi.Adapter.VerticalAdapter;
+import com.example.booksearchrecyclerviewkakaoapi.adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;

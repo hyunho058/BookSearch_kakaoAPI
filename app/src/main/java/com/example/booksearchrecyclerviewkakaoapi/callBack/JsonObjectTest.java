@@ -1,10 +1,9 @@
-package com.example.booksearchrecyclerviewkakaoapi.CallBack;
+package com.example.booksearchrecyclerviewkakaoapi.callBack;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

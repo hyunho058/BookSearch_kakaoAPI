@@ -1,4 +1,4 @@
-package com.example.booksearchrecyclerviewkakaoapi.CallBack;
+package com.example.booksearchrecyclerviewkakaoapi.callBack;
 
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
 

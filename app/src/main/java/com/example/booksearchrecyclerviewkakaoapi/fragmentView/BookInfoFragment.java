@@ -1,9 +1,7 @@
-package com.example.booksearchrecyclerviewkakaoapi.FragmentView;
+package com.example.booksearchrecyclerviewkakaoapi.fragmentView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,9 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.booksearchrecyclerviewkakaoapi.R;
-
-import java.io.InputStream;
-import java.net.URL;
 
 public class BookInfoFragment extends Fragment {
     String TAG = "BookInfoFragment";

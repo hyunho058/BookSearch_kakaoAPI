@@ -1,4 +1,4 @@
-package com.example.booksearchrecyclerviewkakaoapi.Adapter;
+package com.example.booksearchrecyclerviewkakaoapi.adapter;
 
 public class ViewType {
     public static final int ItemHorizontal = 0;

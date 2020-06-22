@@ -1,9 +1,8 @@
-package com.example.booksearchrecyclerviewkakaoapi.FragmentView;
+package com.example.booksearchrecyclerviewkakaoapi.fragmentView;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.booksearchrecyclerviewkakaoapi.CallBack.BookSearchRunnable;
-import com.example.booksearchrecyclerviewkakaoapi.CallBack.JsonObjectTest;
+import com.example.booksearchrecyclerviewkakaoapi.callBack.JsonObjectTest;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.R;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;

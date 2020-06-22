@@ -1,8 +1,6 @@
-package com.example.booksearchrecyclerviewkakaoapi.CallBack;
+package com.example.booksearchrecyclerviewkakaoapi.callBack;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
