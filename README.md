@@ -1,14 +1,22 @@
 # Book search
 
+* OPEN API(kakao search API)를 이용하여 keyword를 통해 책 정보를 받아와 데이터를 출력 해주는 어플입니다.
+
 ## 사용 기술
 
-* RecyclerView
-* TabLayout
-* Fragment
-* Asyctask
-* REST API
+* [Fragment](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Fragment.md)
+
+* [RecyclerView](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/RecyclerVIew.md)
+* [TabLayout](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/TabLayout.md)
+* [Asyctask](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/AsyncTask.md)
+* [REST API]([https://github.com/hyunho058/TIL/blob/master/AndroidTIL/REST%20API.md](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/REST API.md))
   * JSON Object
+* [Debounce](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Debounce.md)
+* [Glide](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Glide.md)
+* [Zxing]([https://github.com/hyunho058/TIL/blob/master/AndroidTIL/QR%20code.md](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/QR code.md))
+
+
 
 ## Image
 
-<img src="README.assets/image-20200622230214314.png" alt="image-20200622230214314" style="zoom:25%;" /> <img src="README.assets/image-20200622230229448.png" alt="image-20200622230229448" style="zoom:25%;" /> <img src="README.assets/image-20200622230244714.png" alt="image-20200622230244714" style="zoom:25%;" /> 
+![image-20200623082738747](README.assets/image-20200623082738747.png)

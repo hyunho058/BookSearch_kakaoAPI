@@ -115,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(verticalAdapter);
 
         tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("HOME",R.drawable.house_black_18dp)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Search",R.drawable.toys_black_18dp)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("QR",R.drawable.border_vertical_black_18dp)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Map",R.drawable.border_vertical_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Search",R.drawable.baseline_search_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("QR",R.drawable.baseline_camera_alt_black_18dp)));
+//        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Map",R.drawable.border_vertical_black_18dp)));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
                         new IntentIntegrator(MainActivity.this).initiateScan();
                         intentIntegrator.initiateScan();
                         break;
-                    case 3:
-                        break;
+//                    case 3:
+////                        break;
 //                    case  0:
 //                        if (searchFragment != null) {
 //                            fragmentTransaction.remove(searchFragment);
