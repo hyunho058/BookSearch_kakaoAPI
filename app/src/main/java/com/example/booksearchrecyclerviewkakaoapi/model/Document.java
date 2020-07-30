@@ -1,5 +1,7 @@
 package com.example.booksearchrecyclerviewkakaoapi.model;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +18,7 @@ public class Document {
     String status;
     String thumbnail;
     String title;
-    ArrayList<String> translators;
+    ArrayList<String> translators = new ArrayList<>();
     String url;
 
     Document() {
@@ -30,6 +32,7 @@ public class Document {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.v("DOCUMENT","DOCUMENT11_1=="+e.toString());
         }
         try {
             contents = jsonObject.getString("contents");
@@ -44,6 +47,7 @@ public class Document {
             url=jsonObject.getString("url");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.v("DOCUMENT","DOCUMENT11_2=="+e.toString());
         }
         try{
             for(int i=0; i<jsonObject.getJSONArray("translators").length(); i++){
@@ -52,6 +56,7 @@ public class Document {
             }
         }catch (Exception e){
             e.printStackTrace();
+            Log.v("DOCUMENT","DOCUMENT11_3=="+e.toString());
         }
     }
 

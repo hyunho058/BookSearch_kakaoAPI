@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BookVO> bookList;
     ArrayList<Document> documentList;
     ArrayList<Document> documentListR;
+    List<Document> documentListL;
 
     public static boolean isInfoOpen = false;
 
@@ -190,13 +191,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
                 Log.v(TAG,"retrofit_onResponse()");
+                Log.v(TAG,"retrofit_call=="+call);
+                Log.v(TAG,"retrofit_response.body()=="+response.body());
                 documentListR = (ArrayList<Document>) response.body();
-                Log.v(TAG,"retrofit_documentListR=="+documentListR.get(0).toString());
+                Log.v(TAG,"retrofit_documentListR=="+documentListR);
+//                Log.v(TAG,"retrofit_documentListR=="+documentListR.get(0).getTitle());
             }
 
             @Override
             public void onFailure(Call<List<Document>> call, Throwable t) {
-                Log.v(TAG,"retrofit_onFailure()");
+                Log.v(TAG,"retrofit_onFailure()=="+ t);
+            }
+        });
+
+        Call<Document> call1 = kakaoRetrofit.getISBN(kakaoAK,"9780071808552");
+        call1.enqueue(new Callback<Document>() {
+            @Override
+            public void onResponse(Call<Document> call, Response<Document> response) {
+                Log.v(TAG,"retrofit_onResponse_response_call1=="+response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Document> call, Throwable t) {
+                Log.v(TAG,"retrofit_onFailure()_response_call1=="+t);
             }
         });
     }

@@ -2,6 +2,7 @@ package com.example.booksearchrecyclerviewkakaoapi.callBack;
 
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -14,7 +15,12 @@ public interface KakaoRetrofit {
 
     @GET("v3/search/book?target=title")
     Call<List<Document>>
-    getData(@Header("Authorization: KakaoAK") String kakaoAK
+    getData(@Header("Authorization:KakaoAK") String kakaoAK
+            ,@Query("query") String keyword);
+
+    @GET("v3/search/book?target=isbn")
+    Call<Document>
+    getISBN(@Header("Authorization:KakaoAK") String kakaoAK
             ,@Query("query") String keyword);
 
 //    @GET("/v3/search/book?target=isbn")
