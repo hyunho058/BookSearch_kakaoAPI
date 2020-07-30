@@ -23,6 +23,8 @@ import com.example.booksearchrecyclerviewkakaoapi.adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.adapter.ViewType;
 import com.example.booksearchrecyclerviewkakaoapi.callBack.BookSearchTask;
 import com.example.booksearchrecyclerviewkakaoapi.callBack.JsonObjectTest;
+import com.example.booksearchrecyclerviewkakaoapi.callBack.KakaoRetrofit;
+import com.example.booksearchrecyclerviewkakaoapi.callBack.RetrofitService;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.HomeFragment;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.SearchFragment;
@@ -38,7 +40,14 @@ import com.google.zxing.integration.android.IntentResult;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
@@ -114,9 +123,15 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setLayoutManager(linearLayoutManager);
 //        recyclerView.setAdapter(verticalAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("HOME",R.drawable.house_black_18dp)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Search",R.drawable.baseline_search_black_18dp)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("QR",R.drawable.baseline_camera_alt_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab()
+                .setCustomView(createTabView(
+                        "HOME",R.drawable.house_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab()
+                .setCustomView(createTabView(
+                        "Search",R.drawable.baseline_search_black_18dp)));
+        tabLayout.addTab(tabLayout.newTab()
+                .setCustomView(createTabView(
+                        "QR",R.drawable.baseline_camera_alt_black_18dp)));
 //        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Map",R.drawable.border_vertical_black_18dp)));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
@@ -148,30 +163,6 @@ public class MainActivity extends AppCompatActivity {
                         new IntentIntegrator(MainActivity.this).initiateScan();
                         intentIntegrator.initiateScan();
                         break;
-//                    case 3:
-////                        break;
-//                    case  0:
-//                        if (searchFragment != null) {
-//                            fragmentTransaction.remove(searchFragment);
-//                            fragmentTransaction.commit();
-//                            searchFragment = null;
-//                        }
-//                        break;
-//                    case 1:
-//                        if (searchFragment == null) {
-//                            searchFragment = new SearchFragment();
-//                        }
-//                        fragmentTransaction.replace(
-//                                R.id.frame, searchFragment).commitAllowingStateLoss();
-//                        searchFragment.setArguments(bundle);
-//                        break;
-//                    case 2:
-//                        new IntentIntegrator(MainActivity.this).initiateScan();
-////                        intentIntegrator.initiateScan();
-//                        break;
-//                    case 3:
-//                        startQRCode();
-//                        break;
                 }
             }
             @Override
@@ -186,6 +177,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        String kakaoAK = "a85301089026f3d76b61ac72f59b1d91";
+        String keyword = "JAVA";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://dapi.kakao.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        KakaoRetrofit kakaoRetrofit = retrofit.create(KakaoRetrofit.class);
+        Call<List<Document>> call = kakaoRetrofit.getData(kakaoAK, keyword);
+        call.enqueue(new Callback<List<Document>>() {
+            @Override
+            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
+                Log.v(TAG,"retrofit_onResponse()");
+                documentListR = (ArrayList<Document>) response.body();
+                Log.v(TAG,"retrofit_documentListR=="+documentListR.get(0).toString());
+            }
+
+            @Override
+            public void onFailure(Call<List<Document>> call, Throwable t) {
+                Log.v(TAG,"retrofit_onFailure()");
+            }
+        });
     }
 
     /*

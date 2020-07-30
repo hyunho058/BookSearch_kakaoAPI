@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,13 +48,14 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
     @Override
     protected ArrayList<Document> doInBackground(String... params) {
         Log.v(TAG,"doInBackground()_Start");
-        Log.v(TAG,"doInBackground()_keyword"+keyword);
+        Log.v(TAG,"doInBackground()_keyword=="+keyword);
         String url = "https://dapi.kakao.com/v3/search/book?target=title";
         url += "&query=" + keyword;
         try {
             /*** REQUEST */
             //URL 객체 생성
             URL objUrl = new URL(url);
+            Log.v(TAG,"URL=="+objUrl);
             HttpURLConnection con = (HttpURLConnection) objUrl.openConnection();
             // 요청방식 설정(API 문서 참조)
             con.setRequestMethod("GET");
@@ -85,33 +87,13 @@ public class JsonObjectTest extends AsyncTask<String, Void, ArrayList<Document>>
                 Log.v(TAG, "DEBUG:document[" + i + "]=" + document);
             }
             Log.v(TAG, "DEBUG:jsonData==" + jsonData);
+            Log.v(TAG,"docList size()==="+documentList.size());
             Log.v(TAG,"docList==="+documentList);
+            Log.v(TAG,"docList==="+documentList.get(0).getTitle());
 
         } catch (Exception e) {
             Log.v(TAG, "run()_Exception==" + e.toString());
         }
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://dapi.kakao.com/")
-                .addConverterFactory(GsonConverterFactory.create()).build();
-        RetrofitService service = retrofit.create(RetrofitService.class);
-        Call<List<Document>> call = service.deocument(token1,"java");
-        call.enqueue(new Callback<List<Document>>() {
-            @Override
-            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
-                Log.v(TAG,"response.body()=="+response.body());
-                Log.v(TAG,"call=="+call);
-                if(response.isSuccessful()){
-                    doo = response.body();
-                    Log.v(TAG,"document=="+doo);
-                }else {
-                    Log.v(TAG,"err==" +response.errorBody());
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Document>> call, Throwable t) {
-                Log.v(TAG,"call== "+call + "t== "+t);
-            }
-        });
         return documentList;
     }
 }
