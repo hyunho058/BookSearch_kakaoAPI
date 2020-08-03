@@ -21,16 +21,17 @@ import android.widget.Toast;
 
 import com.example.booksearchrecyclerviewkakaoapi.adapter.VerticalAdapter;
 import com.example.booksearchrecyclerviewkakaoapi.adapter.ViewType;
+import com.example.booksearchrecyclerviewkakaoapi.callBack.APIClient;
 import com.example.booksearchrecyclerviewkakaoapi.callBack.BookSearchTask;
 import com.example.booksearchrecyclerviewkakaoapi.callBack.JsonObjectTest;
 import com.example.booksearchrecyclerviewkakaoapi.callBack.KakaoRetrofit;
-import com.example.booksearchrecyclerviewkakaoapi.callBack.RetrofitService;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.BookInfoFragment;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.HomeFragment;
 import com.example.booksearchrecyclerviewkakaoapi.fragmentView.SearchFragment;
 import com.example.booksearchrecyclerviewkakaoapi.model.AdapterVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.BookVO;
 import com.example.booksearchrecyclerviewkakaoapi.model.Document;
+import com.example.booksearchrecyclerviewkakaoapi.model.DocumentList;
 import com.google.android.material.tabs.TabLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -46,8 +47,6 @@ import java.util.concurrent.ExecutionException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
@@ -68,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<AdapterVO> adapterVO = new ArrayList<>();
     ArrayList<BookVO> bookList;
     ArrayList<Document> documentList;
-    ArrayList<Document> documentListR;
-    List<Document> documentListL;
+    ArrayList<Document> documents;
+    KakaoRetrofit kakaoRetrofit;
 
     public static boolean isInfoOpen = false;
 
@@ -78,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        btnHome = findViewById(R.id.btnHome);
-//        btnHome.setOnClickListener(mClick);
-//        btnSearch = findViewById(R.id.btnSearch);
-//        btnSearch.setOnClickListener(mClick);
         tabLayout=(TabLayout) findViewById(R.id.tabLayout);
 
         //QR code - Zxing Library
@@ -89,12 +84,13 @@ public class MainActivity extends AppCompatActivity {
         intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
 
         //  AsyncTask 이용한 데이터 생성
-        AsyncTaskData("java");
-        AsyncTaskData("c언어");
-        AsyncTaskData("python");
-        AsyncTaskData("Linux");
-        AsyncTaskData("경제");
-        AsyncTaskData("여행");
+//        AsyncTaskData("java");
+//        AsyncTaskData("c언어");
+//        AsyncTaskData("python");
+//        AsyncTaskData("Linux");
+//        AsyncTaskData("경제");
+//        AsyncTaskData("여행");
+
         fragmentManager = getSupportFragmentManager();
         if (homeFragment == null) {
             fragmentTransaction=fragmentManager.beginTransaction();
@@ -178,46 +174,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String kakaoAK = "a85301089026f3d76b61ac72f59b1d91";
-        String keyword = "JAVA";
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://dapi.kakao.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        KakaoRetrofit kakaoRetrofit = retrofit.create(KakaoRetrofit.class);
-        Call<List<Document>> call = kakaoRetrofit.getData(kakaoAK, keyword);
-        call.enqueue(new Callback<List<Document>>() {
+        /**
+         * RETROFIT2 이요한 REST API Response and Request
+         */
+
+        String kakaoAK = "KakaoAK a85301089026f3d76b61ac72f59b1d91";
+        final String keyword = "JAVA";
+
+        kakaoRetrofit = APIClient.getClient().create(KakaoRetrofit.class);
+        Call<DocumentList> callDocumentList = kakaoRetrofit.getDocument(kakaoAK, keyword);
+        callDocumentList.enqueue(new Callback<DocumentList>() {
             @Override
-            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
-                Log.v(TAG,"retrofit_onResponse()");
-                Log.v(TAG,"retrofit_call=="+call);
-                Log.v(TAG,"retrofit_response.body()=="+response.body());
-                documentListR = (ArrayList<Document>) response.body();
-                Log.v(TAG,"retrofit_documentListR=="+documentListR);
-//                Log.v(TAG,"retrofit_documentListR=="+documentListR.get(0).getTitle());
+            public void onResponse(Call<DocumentList> call, Response<DocumentList> response) {
+                Log.v(TAG,"retrofit_onResponse=="+response.code());
+                Log.v(TAG,"retrofit_onResponse=="+call.request().toString());
+                Log.v(TAG,"retrofit_response.body().size()=="+response.body().documents.size());
+                Log.v(TAG,"retrofit_response.body()_documents.get(0).getAuthors()=="+response.body().documents.get(0).getAuthors());
+                documents = response.body().documents;
+                Log.v(TAG,"retrofit_documents=="+documents.get(0).getAuthors());
+                initData(keyword);
+//                documentListR = (List<SearchData>) response.body();
+//                Log.v(TAG,"retrofit_response=="+documentListR.get(0).toString());
             }
-
             @Override
-            public void onFailure(Call<List<Document>> call, Throwable t) {
-                Log.v(TAG,"retrofit_onFailure()=="+ t);
-            }
-        });
-
-        Call<Document> call1 = kakaoRetrofit.getISBN(kakaoAK,"9780071808552");
-        call1.enqueue(new Callback<Document>() {
-            @Override
-            public void onResponse(Call<Document> call, Response<Document> response) {
-                Log.v(TAG,"retrofit_onResponse_response_call1=="+response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Document> call, Throwable t) {
-                Log.v(TAG,"retrofit_onFailure()_response_call1=="+t);
+            public void onFailure(Call<DocumentList> call, Throwable t) {
+                Log.v(TAG,"retrofit_onFailure=="+t.toString());
+                Log.v(TAG,"retrofit_onFailure=="+call.request().toString());
             }
         });
     }
-
+    
     /*
     View.OnClickListener mClick = new View.OnClickListener() {
         @Override
@@ -335,14 +322,19 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * adapterVO 에 데이터 저장
+     * 한번 호출 할때마다 Document List 객체를 저장한다
      * @param keyword
      */
     public void initData(String keyword) {
         Log.v(TAG, "-----------initData() Start------------");
         adapterVO.add(new AdapterVO(keyword, ViewType.ItemBookTitle));
 //        adapterVO.add(new AdapterVO(this, bookList, ViewType.ItemHorizontal));
-        adapterVO.add(new AdapterVO(this, documentList, ViewType.ItemHorizontal));
+        adapterVO.add(new AdapterVO(this, documents, ViewType.ItemHorizontal));
     }
+
+    /**
+     * QR Code - Zxing Library
+     */
     public void startQRCode() {
         new IntentIntegrator(this).initiateScan();
     }
@@ -366,6 +358,10 @@ public class MainActivity extends AppCompatActivity {
         }
         return bmp;
     }
+
+    /**
+     * Custom TabLayout
+     */
     private View createTabView(String tabName, int iconImage){
         View tabView = getLayoutInflater().inflate(R.layout.custom_tab, null);
         TextView tvTab = (TextView) tabView.findViewById(R.id.tvTab);

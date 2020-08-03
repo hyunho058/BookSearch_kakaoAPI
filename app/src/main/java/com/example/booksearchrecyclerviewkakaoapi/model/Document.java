@@ -29,10 +29,11 @@ public class Document {
             for (int i = 0; i < jsonObject.getJSONArray("authors").length(); i++) {
                 String author = jsonObject.getJSONArray("authors").get(i).toString();
                 authors.add(author);
+                Log.v("Document2","1");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.v("DOCUMENT","DOCUMENT11_1=="+e.toString());
+            Log.v("Document1","DOCUMENT11_1=="+e.toString());
         }
         try {
             contents = jsonObject.getString("contents");
@@ -45,18 +46,20 @@ public class Document {
             thumbnail=jsonObject.getString("thumbnail");
             title=jsonObject.getString("title");
             url=jsonObject.getString("url");
+//            Log.v("DOCUMENT2","2");
         } catch (Exception e) {
             e.printStackTrace();
-            Log.v("DOCUMENT","DOCUMENT11_2=="+e.toString());
+            Log.v("Document1","DOCUMENT11_2=="+e.toString());
         }
         try{
             for(int i=0; i<jsonObject.getJSONArray("translators").length(); i++){
                 String translator = jsonObject.getJSONArray("translators").get(i).toString();
                 translators.add(translator);
+                Log.v("Document2","3");
             }
         }catch (Exception e){
             e.printStackTrace();
-            Log.v("DOCUMENT","DOCUMENT11_3=="+e.toString());
+            Log.v("Document1","DOCUMENT11_3=="+e.toString());
         }
     }
 
