@@ -9,11 +9,11 @@
 * [RecyclerView](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/RecyclerVIew.md)
 * [TabLayout](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/TabLayout.md)
 * [Asyctask](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/AsyncTask.md)
-* [REST API]([https://github.com/hyunho058/TIL/blob/master/AndroidTIL/REST%20API.md](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/REST API.md))
+* [REST API](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/REST_API.md)
   * JSON Object
 * [Debounce](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Debounce.md)
 * [Glide](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Glide.md)
-* [Zxing]([https://github.com/hyunho058/TIL/blob/master/AndroidTIL/QR%20code.md](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/QR code.md))
+* [Zxing](https://github.com/hyunho058/TIL/blob/master/AndroidTIL/Zxing.md)
 
 
 

@@ -84,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
         intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
 
         //  AsyncTask 이용한 데이터 생성
-//        AsyncTaskData("java");
-//        AsyncTaskData("c언어");
-//        AsyncTaskData("python");
-//        AsyncTaskData("Linux");
-//        AsyncTaskData("경제");
-//        AsyncTaskData("여행");
+        AsyncTaskData("java");
+        AsyncTaskData("c언어");
+        AsyncTaskData("python");
+        AsyncTaskData("Linux");
+        AsyncTaskData("경제");
+        AsyncTaskData("여행");
 
         fragmentManager = getSupportFragmentManager();
         if (homeFragment == null) {
@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
         /**
          * RETROFIT2 이요한 REST API Response and Request
          */
-
         String kakaoAK = "KakaoAK a85301089026f3d76b61ac72f59b1d91";
         final String keyword = "JAVA";
 
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG,"retrofit_response.body()_documents.get(0).getAuthors()=="+response.body().documents.get(0).getAuthors());
                 documents = response.body().documents;
                 Log.v(TAG,"retrofit_documents=="+documents.get(0).getAuthors());
-                initData(keyword);
+//                initData(keyword);
 //                documentListR = (List<SearchData>) response.body();
 //                Log.v(TAG,"retrofit_response=="+documentListR.get(0).toString());
             }
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     /*
     View.OnClickListener mClick = new View.OnClickListener() {
         @Override
@@ -329,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "-----------initData() Start------------");
         adapterVO.add(new AdapterVO(keyword, ViewType.ItemBookTitle));
 //        adapterVO.add(new AdapterVO(this, bookList, ViewType.ItemHorizontal));
-        adapterVO.add(new AdapterVO(this, documents, ViewType.ItemHorizontal));
+        adapterVO.add(new AdapterVO(this, documentList, ViewType.ItemHorizontal));
     }
 
     /**

@@ -40,7 +40,8 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater
+                =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Log.v(TAG,"onCreateViewHolder__viewType=="+viewType);
         if(viewType == ViewType.ItemBookTitle){
             view=inflater.inflate(R.layout.title_item,parent,false);
@@ -69,8 +70,11 @@ public class VerticalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }else if(holder instanceof HorizontalItem){
-            ((HorizontalItem)holder).recycler_horizontal.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
-            horizontalAdapter = new HorizontalAdapter(context, adapterList.get(position).getDocumentList(), bookInfoFragment);
+            ((HorizontalItem)holder).recycler_horizontal.setLayoutManager
+                    (new LinearLayoutManager
+                            (context,LinearLayoutManager.HORIZONTAL,false));
+            horizontalAdapter = new HorizontalAdapter
+                    (context, adapterList.get(position).getDocumentList(), bookInfoFragment);
             ((HorizontalItem)holder).recycler_horizontal.setAdapter(horizontalAdapter);
         }
     }
