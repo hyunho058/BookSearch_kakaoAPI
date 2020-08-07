@@ -2,14 +2,18 @@ package com.example.booksearchrecyclerviewkakaoapi;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -50,8 +54,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
-    Button btnHome;
-    Button btnSearch;
     Bundle bundle;
     Handler handler;
     TabLayout tabLayout;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     BookInfoFragment bookInfoFragment;
     HomeFragment homeFragment;
     VerticalAdapter verticalAdapter;
+    Context context = this;
 
     IntentIntegrator intentIntegrator;
 
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Document> documentList;
     ArrayList<Document> documents;
     KakaoRetrofit kakaoRetrofit;
+    String kakaoAK = "KakaoAK xxxxxx";
 
     public static boolean isInfoOpen = false;
 
@@ -83,13 +87,16 @@ public class MainActivity extends AppCompatActivity {
         intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setBeepEnabled(false);//바코드 인식시 소리
 
-        //  AsyncTask 이용한 데이터 생성
+        //  AsyncTask 이용한  REST API 데이터 생성
         AsyncTaskData("java");
         AsyncTaskData("c언어");
         AsyncTaskData("python");
         AsyncTaskData("Linux");
         AsyncTaskData("경제");
         AsyncTaskData("여행");
+
+        // RETROFIT2 이요한  REST API
+        callRetrofit("JAVA");
 
         fragmentManager = getSupportFragmentManager();
         if (homeFragment == null) {
@@ -100,26 +107,9 @@ public class MainActivity extends AppCompatActivity {
             homeFragment.setArguments(bundle);
             fragmentTransaction.replace(
                     R.id.frame, homeFragment).commitAllowingStateLoss();
-
-            Log.v(TAG,"fragmentHome==");
         }
 
-        // Thread 이용한 데이터 생성
-//        threadData("여행");
-//        threadData("java");
-//        threadData("c언어");
-//        threadData("python");
-//        threadData("Linux");
-//        threadData("경제");
-
-//        RecyclerView recyclerView = findViewById(R.id.recyclerViewVertical);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
-//                this, LinearLayoutManager.VERTICAL, false);
-//        verticalAdapter = new VerticalAdapter(this, adapterVO, bookInfoFragment);
-//        //context, listItems, bookDetailFragment
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(verticalAdapter);
-
+        // tabLayout 생성
         tabLayout.addTab(tabLayout.newTab()
                 .setCustomView(createTabView(
                         "HOME",R.drawable.house_black_18dp)));
@@ -129,122 +119,70 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab()
                 .setCustomView(createTabView(
                         "QR",R.drawable.baseline_camera_alt_black_18dp)));
-//        tabLayout.addTab(tabLayout.newTab().setCustomView(createTabView("Map",R.drawable.border_vertical_black_18dp)));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                //Tap 이 선택 되었을떄 호출
-                Log.v(TAG,"onTabSelected()_getPosition())="+tab.getPosition());
-                fragmentTransaction = fragmentManager.beginTransaction();
-                bundle = new Bundle();
-                switch (tab.getPosition()){
-                    case 0:
-                        if (homeFragment == null) {
-                            homeFragment = new HomeFragment(adapterVO, bookInfoFragment);
-                            Log.v(TAG,"fragmentHome==");
-                        }
-                        fragmentTransaction.replace(
-                                R.id.frame, homeFragment).commitAllowingStateLoss();
-                        bundle.putSerializable("list", documentList);
-                        homeFragment.setArguments(bundle);
-                        break;
-                    case 1:
-                        if (searchFragment == null) {
-                            searchFragment = new SearchFragment();
-                        }
-                        fragmentTransaction.replace(
-                                R.id.frame, searchFragment).commitAllowingStateLoss();
-                        searchFragment.setArguments(bundle);
-                        break;
-                    case 2:
-                        new IntentIntegrator(MainActivity.this).initiateScan();
-                        intentIntegrator.initiateScan();
-                        break;
-                }
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                //Tap 이 선택되지 않았을때 호출
-                Log.v(TAG,"onTabUnselected()=="+tab.getPosition());
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                //Tap 이 다시 선택 되었을떄 호출
-                Log.v(TAG,"onTabReselected()=="+tab.getPosition());
-            }
-        });
+        tabLayout.addOnTabSelectedListener(tabSelect);
 
-
-        /**
-         * RETROFIT2 이요한 REST API Response and Request
-         */
-        String kakaoAK = "KakaoAK a85301089026f3d76b61ac72f59b1d91";
-        final String keyword = "JAVA";
-
-        kakaoRetrofit = APIClient.getClient().create(KakaoRetrofit.class);
-        Call<DocumentList> callDocumentList = kakaoRetrofit.getDocument(kakaoAK, keyword);
-        callDocumentList.enqueue(new Callback<DocumentList>() {
-            @Override
-            public void onResponse(Call<DocumentList> call, Response<DocumentList> response) {
-                Log.v(TAG,"retrofit_onResponse=="+response.code());
-                Log.v(TAG,"retrofit_onResponse=="+call.request().toString());
-                Log.v(TAG,"retrofit_response.body().size()=="+response.body().documents.size());
-                Log.v(TAG,"retrofit_response.body()_documents.get(0).getAuthors()=="+response.body().documents.get(0).getAuthors());
-                documents = response.body().documents;
-                Log.v(TAG,"retrofit_documents=="+documents.get(0).getAuthors());
-//                initData(keyword);
-//                documentListR = (List<SearchData>) response.body();
-//                Log.v(TAG,"retrofit_response=="+documentListR.get(0).toString());
-            }
-            @Override
-            public void onFailure(Call<DocumentList> call, Throwable t) {
-                Log.v(TAG,"retrofit_onFailure=="+t.toString());
-                Log.v(TAG,"retrofit_onFailure=="+call.request().toString());
-            }
-        });
     }
 
-    /*
-    View.OnClickListener mClick = new View.OnClickListener() {
+    TabLayout.OnTabSelectedListener tabSelect = new TabLayout.OnTabSelectedListener() {
         @Override
-        public void onClick(View v) {
+        public void onTabSelected(TabLayout.Tab tab) {
+            //Tap 이 선택 되었을떄 호출
+            Log.v(TAG,"onTabSelected()_getPosition())="+tab.getPosition());
             fragmentTransaction = fragmentManager.beginTransaction();
             bundle = new Bundle();
-            switch (v.getId()) {
-                case R.id.btnHome:
-                    Log.v(TAG, "btnHome_Fragment_ShutDown" + btnHome.getId());
-                    if (searchFragment != null) {
-                        fragmentTransaction.remove(searchFragment);
-                        fragmentTransaction.commit();
-                        searchFragment = null;
+            switch (tab.getPosition()){
+                case 0:
+                    if (homeFragment == null) {
+                        homeFragment = new HomeFragment(adapterVO, bookInfoFragment);
+                        Log.v(TAG,"fragmentHome==");
                     }
+                    fragmentTransaction.replace(
+                            R.id.frame, homeFragment).commitAllowingStateLoss();
+                    bundle.putSerializable("list", documentList);
+                    homeFragment.setArguments(bundle);
+                    tab.getIcon().setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
                     break;
-                case R.id.btnSearch:
-                    Log.v(TAG, "btnSearch" + btnSearch.getId());
+                case 1:
                     if (searchFragment == null) {
                         searchFragment = new SearchFragment();
                     }
                     fragmentTransaction.replace(
                             R.id.frame, searchFragment).commitAllowingStateLoss();
                     searchFragment.setArguments(bundle);
+                    tab.getIcon().setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+                    break;
+                case 2:
+                    new IntentIntegrator(MainActivity.this).initiateScan();
+                    intentIntegrator.initiateScan();
                     break;
             }
         }
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            //Tap 이 선택되지 않았을때 호출
+            Log.v(TAG,"onTabUnselected()=="+tab.getPosition());
+        }
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+            //Tap 이 다시 선택 되었을떄 호출
+            Log.v(TAG,"onTabReselected()=="+tab.getPosition());
+        }
     };
-    */
+
     @Override
     public void onBackPressed() {
-        if (searchFragment != null && fragmentTransaction != null) {
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.remove(searchFragment);
-            fragmentTransaction.commit();
-            searchFragment = null;
-        } else if (isInfoOpen) {
-            Toast.makeText(getApplicationContext(), "여기서!", Toast.LENGTH_SHORT).show();
-
-            isInfoOpen = false;
-        } else {
-            super.onBackPressed();
+        for (Fragment currentFragment : getSupportFragmentManager().getFragments()) {
+            if (currentFragment.isVisible()) {
+                Log.v(TAG,"onBackPressed__currentFragment=="+currentFragment.toString());
+                if (currentFragment instanceof HomeFragment) {
+                    Log.v(TAG, "onBackPressed__HomeFragment");
+                    super.onBackPressed();
+                }else{
+                    // 가장 최상위 View 가  HomeFragment 가 아닐시 0번 index tab을 호출한다
+                    TabLayout.Tab tabSelect = tabLayout.getTabAt(0);
+                    tabSelect.select();
+                }
+            }
         }
     }
 
@@ -269,6 +207,32 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    /**
+     * RETROFIT2 이요한 REST API Response and Request
+     */
+    public void callRetrofit(String keyword){
+        kakaoRetrofit = APIClient.getClient().create(KakaoRetrofit.class);
+        Call<DocumentList> callDocumentList = kakaoRetrofit.getDocument(kakaoAK, keyword);
+        callDocumentList.enqueue(new Callback<DocumentList>() {
+            @Override
+            public void onResponse(Call<DocumentList> call, Response<DocumentList> response) {
+                Log.v(TAG,"retrofit_onResponse=="+response.code());
+                Log.v(TAG,"retrofit_onResponse=="+call.request().toString());
+                Log.v(TAG,"retrofit_response.body().size()=="+response.body().documents.size());
+                Log.v(TAG,"retrofit_response.body()_documents.get(0).getAuthors()=="+response.body().documents.get(0).getAuthors());
+                documents = response.body().documents;
+                Log.v(TAG,"retrofit_documents=="+documents.get(0).getAuthors());
+//                initData(keyword);
+//                documentListR = (List<SearchData>) response.body();
+//                Log.v(TAG,"retrofit_response=="+documentListR.get(0).toString());
+            }
+            @Override
+            public void onFailure(Call<DocumentList> call, Throwable t) {
+                Log.v(TAG,"retrofit_onFailure=="+t.toString());
+                Log.v(TAG,"retrofit_onFailure=="+call.request().toString());
+            }
+        });
     }
 
     /**
